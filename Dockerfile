@@ -4,6 +4,12 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+FROM node:slim AS frontend
+WORKDIR /src
+COPY ["Frontend", "."]
+RUN npm install
+RUN npm run build
+
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
@@ -14,6 +20,7 @@ RUN dotnet restore "App/App.csproj"
 COPY . .
 WORKDIR "/src/App"
 RUN dotnet build "App.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet test --no-build --no-restore
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
@@ -21,5 +28,6 @@ RUN dotnet publish "App.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAp
 
 FROM base AS final
 WORKDIR /app
+COPY --from=frontend ["src/dist/", "App/wwwroot/"]
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "App.dll"]
