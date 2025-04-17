@@ -5,6 +5,7 @@
 
 # custom
 App/wwwroot/*
+!App/wwwroot/.keepme
 
 # dotenv files
 .env

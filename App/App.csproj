@@ -19,4 +19,12 @@
     <ProjectReference Include="..\Presentation\Presentation.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\assets\index-9_sxcfan.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\index-D8b4DHJx.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\react-CHdo91hT.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\index.html" />
+    <_ContentIncludedByDefault Remove="wwwroot\vite.svg" />
+  </ItemGroup>
+
 </Project>
