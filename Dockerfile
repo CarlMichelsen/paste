@@ -19,6 +19,7 @@ COPY ["Application/Application.csproj", "Application/"]
 RUN dotnet restore "App/App.csproj"
 COPY . .
 WORKDIR "/src/App"
+COPY --from=frontend ["src/dist/", "App/wwwroot/"]
 RUN dotnet build "App.csproj" -c $BUILD_CONFIGURATION -o /app/build
 RUN dotnet test --no-build --no-restore
 
@@ -28,6 +29,5 @@ RUN dotnet publish "App.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAp
 
 FROM base AS final
 WORKDIR /app
-COPY --from=frontend ["src/dist/", "App/wwwroot/"]
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "App.dll"]
