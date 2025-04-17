@@ -6,7 +6,7 @@ EXPOSE 8081
 
 FROM node:slim AS frontend
 WORKDIR /src
-COPY ["Frontend", "."]
+COPY ["Frontend/", "."]
 RUN npm install
 RUN npm run build
 
@@ -19,13 +19,13 @@ COPY ["Application/Application.csproj", "Application/"]
 RUN dotnet restore "App/App.csproj"
 COPY . .
 WORKDIR "/src/App"
-COPY --from=frontend ["src/dist/", "App/wwwroot/"]
 RUN dotnet build "App.csproj" -c $BUILD_CONFIGURATION -o /app/build
 RUN dotnet test --no-build --no-restore
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "App.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+COPY --from=frontend ["/src/dist/", "/app/publish/wwwroot/"]
 
 FROM base AS final
 WORKDIR /app
