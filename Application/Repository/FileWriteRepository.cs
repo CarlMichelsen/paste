@@ -39,7 +39,7 @@ public class FileWriteRepository(
                 {
                     Id = actionId,
                     FileId = fileId,
-                    ChecksumAlgorithm = content.ChecksumAlgorithm,
+                    Metadata = content.ChecksumAlgorithm,
                     Checksum = content.Checksum,
                     Action = FileAction.Create,
                     PerformedById = ownerId,
@@ -79,7 +79,7 @@ public class FileWriteRepository(
         {
             Id = new FileActionEntityId(Guid.CreateVersion7()),
             FileId = file.Id,
-            ChecksumAlgorithm = content.ChecksumAlgorithm,
+            Metadata = content.ChecksumAlgorithm,
             Checksum = content.Checksum,
             Action = FileAction.ContentUpdate,
             PerformedById = performedById,
@@ -115,6 +115,7 @@ public class FileWriteRepository(
         {
             Id = new FileActionEntityId(Guid.CreateVersion7()),
             FileId = file.Id,
+            Metadata = newFileName,
             Action = FileAction.NameUpdate,
             PerformedById = performedById,
             PerformedAt = timeProvider.GetUtcNow(),
@@ -142,6 +143,7 @@ public class FileWriteRepository(
         {
             Id = new FileActionEntityId(Guid.CreateVersion7()),
             FileId = file.Id,
+            Metadata = "soft-delete",
             Action = FileAction.Delete,
             PerformedById = performedById,
             PerformedAt = now,

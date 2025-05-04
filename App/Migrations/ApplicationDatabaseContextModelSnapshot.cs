@@ -64,14 +64,15 @@ namespace App.Migrations
                         .HasColumnType("character varying(255)")
                         .HasColumnName("checksum");
 
-                    b.Property<string>("ChecksumAlgorithm")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("checksum_algorithm");
-
                     b.Property<Guid>("FileId")
                         .HasColumnType("uuid")
                         .HasColumnName("file_id");
+
+                    b.Property<string>("Metadata")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("metadata");
 
                     b.Property<DateTimeOffset>("PerformedAt")
                         .HasColumnType("timestamp with time zone")

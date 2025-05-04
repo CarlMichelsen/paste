@@ -15,7 +15,7 @@ public class FileActionEntity : IEntity
     
     [MinLength(2)]
     [MaxLength(255)]
-    public string? ChecksumAlgorithm { get; init; }
+    public required string Metadata { get; init; }
     
     [MinLength(2)]
     [MaxLength(255)]

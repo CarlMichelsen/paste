@@ -63,7 +63,7 @@ namespace App.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     file_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    checksum_algorithm = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    metadata = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     checksum = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     action = table.Column<string>(type: "text", nullable: false),
                     performed_by_id = table.Column<long>(type: "bigint", nullable: false),

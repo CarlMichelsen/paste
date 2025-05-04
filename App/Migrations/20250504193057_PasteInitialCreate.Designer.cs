@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace App.Migrations
 {
     [DbContext(typeof(ApplicationDatabaseContext))]
-    [Migration("20250504192134_PasteInitialCreate")]
+    [Migration("20250504193057_PasteInitialCreate")]
     partial class PasteInitialCreate
     {
         /// <inheritdoc />
@@ -67,14 +67,15 @@ namespace App.Migrations
                         .HasColumnType("character varying(255)")
                         .HasColumnName("checksum");
 
-                    b.Property<string>("ChecksumAlgorithm")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("checksum_algorithm");
-
                     b.Property<Guid>("FileId")
                         .HasColumnType("uuid")
                         .HasColumnName("file_id");
+
+                    b.Property<string>("Metadata")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("metadata");
 
                     b.Property<DateTimeOffset>("PerformedAt")
                         .HasColumnType("timestamp with time zone")
