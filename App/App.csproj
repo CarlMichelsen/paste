@@ -8,7 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+    
     <PackageReference Include="Scalar.AspNetCore" Version="2.1.16" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
@@ -16,15 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\Presentation\Presentation.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\assets\index-9_sxcfan.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\index-D8b4DHJx.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\react-CHdo91hT.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\index.html" />
-    <_ContentIncludedByDefault Remove="wwwroot\vite.svg" />
   </ItemGroup>
 
 </Project>
