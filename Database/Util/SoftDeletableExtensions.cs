@@ -14,8 +14,18 @@ public static class SoftDeletableExtensions
     {
         entity.HasQueryFilter(e => e.DeletedAt == null);
 
-        var entityType = modelBuilder.Model.FindEntityType(typeof(TEntity))!;
-        var deletedAtColumn = entityType.FindProperty(nameof(ISoftDeletable.DeletedAt))!;
+        var entityType = modelBuilder.Model.FindEntityType(typeof(TEntity));
+        if (entityType is null)
+        {
+            throw new NullReferenceException($"Cannot find entity type {typeof(TEntity).Name}");
+        }
+        
+        var deletedAtColumn = entityType.FindProperty(nameof(ISoftDeletable.DeletedAt));
+        if (deletedAtColumn is null)
+        {
+            throw new NullReferenceException($"Cannot find {nameof(ISoftDeletable.DeletedAt)} column when configuring soft-deletable on {typeof(TEntity).Name}");
+        }
+        
         entity
             .HasIndex(p => p.DeletedAt)
             .HasFilter($"\"{entityType.GetTableName()}\".\"{deletedAtColumn.GetColumnName()}\" IS NULL");

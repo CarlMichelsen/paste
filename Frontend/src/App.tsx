@@ -25,18 +25,19 @@ const App: React.FC<AppProps> = ({ children }) => {
         queryKey: ['user'],
         queryFn: () => safelyGetUser(),
         enabled: !appStore.user,
+        retry: false,
     });
     
     useEffect(() => appStore.setUser(data ?? null), [isLoading, data])
     
     return isLoading ? (
-        <p>Loading...</p>
-    ) : (
-        <main className="grid">
-            <Header user={appStore.user} />
-            {children}
-        </main>
-    );
+            <p className="container mx-auto relative z-10">Loading...</p>
+        ) : (
+            <main className="container mx-auto grid relative z-10">
+                <Header user={appStore.user}/>
+                {children}
+            </main>
+        );
 }
 
 export default App;

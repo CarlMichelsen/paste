@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using Application.Exception;
 using Microsoft.AspNetCore.Http;
 using MimeDetective;
 using MimeDetective.Definitions;
@@ -31,13 +30,7 @@ public class FileContent : IFileContent
         file.CopyTo(memoryStream);
         this.Bytes = memoryStream.ToArray();
         
-        this.MimeType = DetectMimeType(this.Bytes);
-        if (file.ContentType != this.MimeType)
-        {
-            throw new InconsistentMimeTypeException(
-                $"Form sent mimetype '{file.ContentType}' and it is not the same as the detected mimetype '{this.MimeType}'.");
-        }
-        
+        this.MimeType = file.ContentType;
         this.Checksum = CalculateChecksum(this.Bytes);
     }
     
@@ -49,9 +42,7 @@ public class FileContent : IFileContent
         }
 
         this.Bytes = bytes;
-        
         this.MimeType = DetectMimeType(bytes);
-        
         this.Checksum = CalculateChecksum(bytes);
     }
     
@@ -67,20 +58,13 @@ public class FileContent : IFileContent
     {
         using var stream = new MemoryStream(bytes);
         var inspectionResult = ContentInspector.Inspect(stream);
-        
-        // Get the most likely MIME type match
         var firstMatch = inspectionResult.ByMimeType().FirstOrDefault();
-        
-        // Return the detected MIME type or a default
         return firstMatch?.MimeType ?? "application/octet-stream";
     }
     
     private static string CalculateChecksum(byte[] bytes)
     {
-        using var sha256 = SHA256.Create();
-        var hashBytes = sha256.ComputeHash(bytes);
-        
-        // Convert hash to lowercase hex string
+        var hashBytes = SHA256.HashData(bytes);
         return Convert.ToHexString(hashBytes).ToLowerInvariant();
     }
 }

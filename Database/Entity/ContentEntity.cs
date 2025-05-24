@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Database.Entity;
 
-public class ContentEntity : IEntity
+public class ContentEntity : IEntity, ISoftDeletable
 {
     public required ContentEntityId Id { get; init; }
     
@@ -14,10 +14,15 @@ public class ContentEntity : IEntity
     
     public FileEntity? File { get; init; }
     
+    public DateTimeOffset? DeletedAt { get; set; }
+    
     public static void Configure(ModelBuilder modelBuilder)
     {
         var entityBuilder = modelBuilder
             .Entity<ContentEntity>();
+        
+        entityBuilder
+            .MakeSoftDeletable(modelBuilder);
         
         entityBuilder
             .HasKey(x => x.Id);

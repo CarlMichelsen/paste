@@ -6,6 +6,8 @@ namespace Presentation.Repository;
 
 public interface IFileReadRepository
 {
+    Task<FileEntity?> GetFileWithoutContentById(FileEntityId id, long userId);
+    
     Task<FileEntity?> GetFullFileById(FileEntityId id, long userId);
     
     Task<FileEntity?> GetFullFileByName(FileName fileName, long userId);

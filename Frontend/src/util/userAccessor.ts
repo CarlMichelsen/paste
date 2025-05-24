@@ -7,6 +7,7 @@ export class UserAccessor
 {
     public static async getUser(): Promise<ServiceResponse<AuthenticatedUser>>
     {
+        console.log("getUser")
         try {
             const response = await fetch(
                 `${this.host()}/api/v1/User`,
@@ -25,6 +26,7 @@ export class UserAccessor
 
     public static async refresh(): Promise<ServiceResponse<void>>
     {
+        console.log("refresh")
         try {
             const response = await fetch(
                 `${this.host()}/api/v1/User`,

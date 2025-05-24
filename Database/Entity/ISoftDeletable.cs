@@ -2,5 +2,5 @@
 
 public interface ISoftDeletable
 {
-    DateTimeOffset? DeletedAt { get; }
+    DateTimeOffset? DeletedAt { get; set; }
 }

@@ -2,12 +2,15 @@
 using App.Logging;
 using App.Middleware;
 using Application.Accessor;
+using Application.Configuration;
+using Application.Handler;
 using Application.Repository;
 using Database;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Presentation.Accessor;
+using Presentation.Handler;
 using Presentation.Repository;
 
 namespace App;
@@ -26,9 +29,26 @@ public static class Dependencies
         
         // Logging
         builder.ApplicationUseSerilog();
+        builder.Services.AddHttpLogging();
+        
+        // Handler
+        builder.Services
+            .AddScoped<IFileDeletionHandler, FileDeletionHandler>()
+            .AddScoped<IFileDownloadHandler, FileDownloadHandler>()
+            .AddScoped<IFileSearchHandler, FileSearchHandler>()
+            .AddScoped<IFileUploadHandler, FileUploadHandler>();
         
         // Services
         builder.Services
+            .AddAntiforgery(options =>
+            {
+                options.HeaderName = ApplicationConstants.AntiforgeryHeaderName;
+                options.Cookie.Name = ApplicationConstants.AntiforgeryCookieName;
+                options.Cookie.HttpOnly = false;
+                options.Cookie.SameSite = builder.Environment.IsDevelopment()
+                    ? SameSiteMode.Lax
+                    : SameSiteMode.Strict;
+            })
             .AddOpenApi()
             .AddHttpContextAccessor()
             .AddMemoryCache()

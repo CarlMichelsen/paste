@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace App.Migrations
 {
     [DbContext(typeof(ApplicationDatabaseContext))]
-    [Migration("20250504193057_PasteInitialCreate")]
+    [Migration("20250524112034_PasteInitialCreate")]
     partial class PasteInitialCreate
     {
         /// <inheritdoc />
@@ -37,12 +37,20 @@ namespace App.Migrations
                         .HasColumnType("bytea")
                         .HasColumnName("data");
 
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
                     b.Property<Guid>("FileId")
                         .HasColumnType("uuid")
                         .HasColumnName("file_id");
 
                     b.HasKey("Id")
                         .HasName("pk_content");
+
+                    b.HasIndex("DeletedAt")
+                        .HasDatabaseName("ix_content_deleted_at")
+                        .HasFilter("\"content\".\"deleted_at\" IS NULL");
 
                     b.HasIndex("FileId")
                         .IsUnique()
@@ -67,6 +75,10 @@ namespace App.Migrations
                         .HasColumnType("character varying(255)")
                         .HasColumnName("checksum");
 
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
                     b.Property<Guid>("FileId")
                         .HasColumnType("uuid")
                         .HasColumnName("file_id");
@@ -87,6 +99,10 @@ namespace App.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_action");
+
+                    b.HasIndex("DeletedAt")
+                        .HasDatabaseName("ix_action_deleted_at")
+                        .HasFilter("\"action\".\"deleted_at\" IS NULL");
 
                     b.HasIndex("FileId")
                         .HasDatabaseName("ix_action_file_id");
@@ -138,6 +154,10 @@ namespace App.Migrations
                     b.HasKey("Id")
                         .HasName("pk_file");
 
+                    b.HasIndex("DeletedAt")
+                        .HasDatabaseName("ix_file_deleted_at")
+                        .HasFilter("\"file\".\"deleted_at\" IS NULL");
+
                     b.HasIndex("OwnerId")
                         .HasDatabaseName("ix_file_owner_id");
 
@@ -184,7 +204,7 @@ namespace App.Migrations
                     b.HasOne("Database.Entity.FileEntity", "File")
                         .WithOne("Content")
                         .HasForeignKey("Database.Entity.ContentEntity", "FileId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_content_file_file_id");
 
@@ -196,7 +216,7 @@ namespace App.Migrations
                     b.HasOne("Database.Entity.FileEntity", "File")
                         .WithMany("Actions")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_action_file_file_id");
 
@@ -217,7 +237,7 @@ namespace App.Migrations
                     b.HasOne("Database.Entity.UserEntity", "Owner")
                         .WithMany("Files")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_file_user_owner_id");
 

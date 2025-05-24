@@ -41,6 +41,9 @@ public class FileEntity : IEntity, ISoftDeletable
     {
         var entityBuilder = modelBuilder
             .Entity<FileEntity>();
+
+        entityBuilder
+            .MakeSoftDeletable(modelBuilder);
         
         entityBuilder
             .HasKey(x => x.Id);
@@ -58,24 +61,21 @@ public class FileEntity : IEntity, ISoftDeletable
                 v => v.Value,
                 v => new FileName(v))
             .HasMaxLength(255);
-        
+
         entityBuilder
             .HasOne(x => x.Owner)
             .WithMany(x => x.Files)
-            .HasForeignKey(x => x.OwnerId)
-            .OnDelete(DeleteBehavior.ClientNoAction); // FileEntity implements ISoftDeletable so don't delete children.
-        
+            .HasForeignKey(x => x.OwnerId);
+
         entityBuilder
             .HasOne(x => x.Content)
             .WithOne(x => x.File)
-            .HasForeignKey<FileEntity>(x => x.ContentId)
-            .OnDelete(DeleteBehavior.ClientNoAction); // FileEntity implements ISoftDeletable so don't delete children.
-        
+            .HasForeignKey<FileEntity>(x => x.ContentId);
+
         entityBuilder
             .HasMany(x => x.Actions)
             .WithOne(x => x.File)
-            .HasForeignKey(x => x.FileId)
-            .OnDelete(DeleteBehavior.ClientNoAction); // FileEntity implements ISoftDeletable so don't delete children.
+            .HasForeignKey(x => x.FileId);
         
         entityBuilder
             .HasIndex(x => new { Name = x.Name, x.OwnerId })

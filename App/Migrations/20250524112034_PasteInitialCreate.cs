@@ -53,7 +53,8 @@ namespace App.Migrations
                         column: x => x.owner_id,
                         principalSchema: "paste",
                         principalTable: "user",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,6 +69,7 @@ namespace App.Migrations
                     action = table.Column<string>(type: "text", nullable: false),
                     performed_by_id = table.Column<long>(type: "bigint", nullable: false),
                     performed_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    deleted_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -77,7 +79,8 @@ namespace App.Migrations
                         column: x => x.file_id,
                         principalSchema: "paste",
                         principalTable: "file",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_action_user_performed_by_id",
                         column: x => x.performed_by_id,
@@ -95,6 +98,7 @@ namespace App.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     data = table.Column<byte[]>(type: "bytea", nullable: false),
                     file_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    deleted_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -104,8 +108,16 @@ namespace App.Migrations
                         column: x => x.file_id,
                         principalSchema: "paste",
                         principalTable: "file",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_action_deleted_at",
+                schema: "paste",
+                table: "action",
+                column: "deleted_at",
+                filter: "\"action\".\"deleted_at\" IS NULL");
 
             migrationBuilder.CreateIndex(
                 name: "ix_action_file_id",
@@ -120,11 +132,25 @@ namespace App.Migrations
                 column: "performed_by_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_content_deleted_at",
+                schema: "paste",
+                table: "content",
+                column: "deleted_at",
+                filter: "\"content\".\"deleted_at\" IS NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_content_file_id",
                 schema: "paste",
                 table: "content",
                 column: "file_id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_file_deleted_at",
+                schema: "paste",
+                table: "file",
+                column: "deleted_at",
+                filter: "\"file\".\"deleted_at\" IS NULL");
 
             migrationBuilder.CreateIndex(
                 name: "ix_file_name_owner_id",

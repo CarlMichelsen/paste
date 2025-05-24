@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Database.Entity;
 
-public class FileActionEntity : IEntity
+public class FileActionEntity : IEntity, ISoftDeletable
 {
     public required FileActionEntityId Id { get; init; }
     
@@ -29,10 +29,15 @@ public class FileActionEntity : IEntity
     
     public required DateTimeOffset PerformedAt { get; init; }
     
+    public DateTimeOffset? DeletedAt { get; set; }
+    
     public static void Configure(ModelBuilder modelBuilder)
     {
         var entityBuilder = modelBuilder
             .Entity<FileActionEntity>();
+        
+        entityBuilder
+            .MakeSoftDeletable(modelBuilder);
         
         entityBuilder
             .HasKey(x => x.Id);
