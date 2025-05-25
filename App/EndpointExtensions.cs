@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using App.Endpoints;
+using Microsoft.AspNetCore.Mvc;
 using Presentation.Accessor;
 
 namespace App;
 
-public static class Endpoints
+public static class EndpointExtensions
 {
     public static void RegisterEndpoints(
         this IEndpointRouteBuilder app)
@@ -15,6 +16,8 @@ public static class Endpoints
         var apiGroup = app
             .MapGroup("api/v1")
             .RequireAuthorization();
+
+        apiGroup.RegisterFileEndpoints();
         
         apiGroup.MapGet("auth", ([FromServices] IUserContextAccessor accessor) => Results.Ok(accessor.GetUserContext()));
     }

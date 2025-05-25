@@ -18,6 +18,13 @@ if (app.Environment.IsDevelopment())
 
     app.MapScalarApiReference();
 }
+else
+{
+    // "Who throws a shoe? Honestly!"
+    await app.Services.EnsureDatabaseUpdated();
+}
+
+app.UseRouting();
 
 app.UseMiddleware<TraceIdMiddleware>();
 
@@ -28,6 +35,11 @@ app.UseAuthorization();
 app.UseResponseCompression();
 
 app.UseStaticFiles(StaticFileOptionsFactory.CreateFileOptions());
+
+// Recommended for security when there are endpoints with state, such as file-upload endpoints.
+app.UseAntiforgery();
+
+app.UseHttpLogging();
 
 app.RegisterEndpoints();
 

@@ -13,8 +13,8 @@ public static class LoggingExtensions
                 .ReadFrom.Configuration(context.Configuration)
                 .ReadFrom.Services(sp)
                 .Enrich.With(sp.GetRequiredService<TraceIdEnricher>())
-                .Enrich.WithProperty("Application", "JobRunner")
-                .Enrich.WithProperty("Environment", GetEnvironmentName(builder));
+                .Enrich.WithProperty("Application", ApplicationConstants.Name)
+                .Enrich.WithProperty("Environment", GetEnvironmentName(builder.Environment));
         });
         builder.Services.AddSingleton<TraceIdEnricher>();
 
@@ -30,8 +30,9 @@ public static class LoggingExtensions
             foreach (var address in addresses)
             {
                 logger.LogInformation(
-                    "{ApplicationName} service has started at {Address}",
+                    "{ApplicationName} has started in {Mode} mode at {Address}",
                     ApplicationConstants.Name,
+                    GetEnvironmentName(app.Environment),
                     address);
             }
         });
@@ -39,6 +40,6 @@ public static class LoggingExtensions
         return app;
     }
     
-    private static string GetEnvironmentName(WebApplicationBuilder builder) =>
-        builder.Environment.IsProduction() ? "Production" : "Development";
+    private static string GetEnvironmentName(IHostEnvironment environment) =>
+        environment.IsProduction() ? "Production" : "Development";
 }
